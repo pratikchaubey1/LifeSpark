@@ -1,0 +1,24 @@
+
+@tailwind components;
+@tailwind utilities;
+
+/* Global reset + clean light background */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #f8fafc; /* Tailwind slate-50 */
+  color: #0f172a;            /* Tailwind slate-900 */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* Remove any old scrollbar / weird styles if you had them before */
