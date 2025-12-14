@@ -1,52 +1,42 @@
-// src/components/FreedomBusiness.jsx
 import React from "react";
 
 export default function FreedomBusiness() {
+  // Upgrade Income (as per provided chart)
   const rows = [
-    { level: 1, income: 30 },
-    { level: 2, income: 60 },
-    { level: 3, income: 120 },
-    { level: 4, income: 240 },
-    { level: 5, income: 480 },
-    { level: 6, income: 960 },
-    { level: 7, income: 1920 },
-    { level: 8, income: 3840 },
-    { level: 9, income: 7680 },
-    { level: 10, income: 15360 },
+    { level: 1, income: 10000, upgrade: 1000 },
+    { level: 2, income: 20000, upgrade: 2000 },
+    { level: 3, income: 30000, upgrade: 3000 },
+    { level: 4, income: 40000, upgrade: 4000 },
+    { level: 5, income: 50000, upgrade: 5000 },
+    { level: 6, income: 60000, upgrade: 6000 },
+    { level: 7, income: 70000, upgrade: 7000 },
+    { level: 8, income: 80000, upgrade: 8000 },
+    { level: 9, income: 90000, upgrade: 9000 },
+    { level: 10, income: 100000, upgrade: 10000 },
   ];
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Freedom Business Income</h2>
+    <div className="p-6 bg-white text-black">
+      <h1 className="text-2xl font-semibold mb-5">Upgrade Income</h1>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="w-full border-collapse text-sm">
+      <div className="overflow-auto rounded-xl border border-gray-300">
+        <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="bg-blue-600 text-white">
-              <th className="px-2 py-2 border-r w-16">Level</th>
-              <th className="px-2 py-2 border-r w-24">Income</th>
-              <th className="px-2 py-2 border-r w-20">Team</th>
-              <th className="px-2 py-2 border-r w-24">Business</th>
-              <th className="px-2 py-2 w-16">Action</th>
+            <tr className="border-b border-gray-300 bg-white">
+              <th className="p-3 border-r font-semibold text-left">S.N</th>
+              <th className="p-3 border-r font-semibold text-left">Level</th>
+              <th className="p-3 border-r font-semibold text-left">Income</th>
+              <th className="p-3 font-semibold text-left">Upgrade</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y">
-            {rows.map((r) => (
-              <tr key={r.level} className="text-gray-700">
-                <td className="px-2 py-2 border-r">{r.level}</td>
-                <td className="px-2 py-2 border-r">{r.income}</td>
-                <td className="px-2 py-2 border-r">0</td>
-                <td className="px-2 py-2 border-r">0</td>
-
-                <td className="px-2 py-2">
-                  <button
-                    className="text-blue-600 underline"
-                    onClick={() => alert(`View details for level ${r.level}`)}
-                  >
-                    View
-                  </button>
-                </td>
+          <tbody>
+            {rows.map((r, idx) => (
+              <tr key={r.level} className="border-b border-gray-200 hover:bg-gray-100 transition">
+                <td className="p-3 border-r">{idx + 1}</td>
+                <td className="p-3 border-r font-medium">LEVEL {r.level}</td>
+                <td className="p-3 border-r">₹ {r.income.toLocaleString("en-IN")}</td>
+                <td className="p-3">₹ {r.upgrade.toLocaleString("en-IN")}</td>
               </tr>
             ))}
           </tbody>

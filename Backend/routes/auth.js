@@ -31,6 +31,15 @@ function generateInviteCode(users) {
   return code;
 }
 
+function generateUserId(users) {
+  // More unique than Date.now() alone (avoids collisions if multiple users created quickly)
+  let id;
+  do {
+    id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  } while (users.some((u) => String(u.id) === id));
+  return id;
+}
+
 router.post('/register', async (req, res) => {
   try {
     const {
@@ -77,7 +86,7 @@ router.post('/register', async (req, res) => {
     const inviteCode = generateInviteCode(users);
 
     const newUser = {
-      id: Date.now().toString(),
+      id: generateUserId(users),
       name,
       email,
       password: hashed,
@@ -86,6 +95,10 @@ router.post('/register', async (req, res) => {
       sponsorId: sponsorId || '',
       sponsorName: sponsorName || '',
       inviteCode,
+      // Roles: member (default), franchise
+      role: 'member',
+      roleAssignedBy: null,
+      roleAssignedAt: null,
       // Activation status is controlled by separate E-Pin store (not per-member pin)
       isActivated: false,
       activationPackage: null,
@@ -98,6 +111,25 @@ router.post('/register', async (req, res) => {
       rankRewardIncome: 0,
       lastDailyCredit: new Date().toISOString().slice(0, 10),
       createdAt: new Date().toISOString(),
+      // Optional extended profile fields
+      gender: '',
+      city: '',
+      state: '',
+      pinCode: '',
+      age: '',
+      panNo: '',
+      aadhaarNo: '',
+      nomineeName: '',
+      nomineeRelation: '',
+      upiNo: '',
+      upiId: '',
+      bankDetails: {
+        accountHolder: '',
+        bankName: '',
+        accountNo: '',
+        ifsc: '',
+        branchName: '',
+      },
     };
 
     // Track who invited this user (direct downline) on sponsor record

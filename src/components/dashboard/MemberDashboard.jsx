@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import TransferToUser from "./e-pin/TransferToUser";
+
+const API_BASE = "http://localhost:5000";
 
 // =================== LEFT MENU ITEMS ===================
 const SIDE_MENU = [
@@ -82,12 +86,9 @@ const MP_Epin = () => (
     <h2 className="text-lg md:text-xl font-semibold text-slate-900 mb-4">
       E-Pin Management
     </h2>
-    <MPCard title="Available E-Pins">
-      <p>List of E-Pins with value, used/unused, generated date, transfer etc.</p>
-    </MPCard>
-    <MPCard title="Generate / Transfer">
-      <p>Form for new pins / transfer to team members.</p>
-    </MPCard>
+
+    {/* Transfer screen shows your User ID + Invite Code at the top */}
+    <TransferToUser />
   </div>
 );
 
@@ -209,6 +210,31 @@ const DashBoardPage = () => (
 
 const MemberLayout = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (res.ok) setRole(data.user?.role || "member");
+      } catch (e) {
+        // ignore
+      }
+    })();
+  }, []);
+
+  const canSeeEpin = role === "franchise";
+  const menuItems = canSeeEpin ? SIDE_MENU : SIDE_MENU.filter((i) => i.id !== "epin");
+
+  useEffect(() => {
+    if (!canSeeEpin && activeTab === "epin") setActiveTab("dashboard");
+  }, [canSeeEpin, activeTab]);
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-stretch">
@@ -220,7 +246,7 @@ const MemberLayout = () => {
 
         <div className="flex-1 overflow-y-auto p-3 space-y-1 text-sm">
           <p className="text-xs text-slate-400 mb-2">Profile</p>
-          {SIDE_MENU.map((item) => {
+          {menuItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
               <button
@@ -260,7 +286,7 @@ const MemberLayout = () => {
           <div className="w-full lg:w-[40%]">
             {activeTab === "dashboard" && <MP_Dashboard />}
             {activeTab === "activeId" && <MP_ActiveId />}
-            {activeTab === "epin" && <MP_Epin />}
+            {canSeeEpin && activeTab === "epin" && <MP_Epin />}
             {activeTab === "teamNetwork" && <MP_TeamNetwork />}
             {activeTab === "incomeReport" && <MP_IncomeReport />}
             {activeTab === "support" && <MP_Support />}
