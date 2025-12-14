@@ -5,7 +5,7 @@ import { fadeUp, sectionTitle } from "../config/motionConfig";
 
 const faqs = [
   {
-    q: "What does a financial / business advisor do for WSE?",
+    q: "What does a financial / business advisor do for LSA?",
     a: "Advisors help members understand the business model, manage risk, set goals and build a sustainable income plan.",
   },
   {
@@ -28,8 +28,11 @@ const FAQSection = () => {
       id="faqs"
       className="py-16 md:py-20 border-b border-slate-200 bg-white"
     >
-      <div className="max-w-5xl mx_auto max-w-5xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4">
+
+        {/* ✅ Bigger FAQs text */}
         {sectionTitle("FAQs", "Get the Answers to Common Questions")}
+
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -41,18 +44,23 @@ const FAQSection = () => {
           {faqs.map((item, i) => (
             <details
               key={i}
-              className="group rounded-2xl bg-white border border-slate-200 px-4 py-3 text-sm shadow-sm"
+              className="group rounded-2xl bg-white border border-slate-200 px-4 py-4 shadow-sm"
             >
               <summary className="flex items-center justify-between cursor-pointer list-none">
-                <span className="text-slate-900 text-sm">{item.q}</span>
-                <span className="text-xs text-slate-500 group-open:hidden">
+                <span className="text-slate-900 text-base font-medium">
+                  {item.q}
+                </span>
+                <span className="text-lg text-slate-500 group-open:hidden">
                   +
                 </span>
-                <span className="text-xs text-slate-500 hidden group-open:inline">
+                <span className="text-lg text-slate-500 hidden group-open:inline">
                   −
                 </span>
               </summary>
-              <p className="mt-2 text-xs text-slate-700">{item.a}</p>
+
+              <p className="mt-3 text-sm text-slate-700 leading-relaxed">
+                {item.a}
+              </p>
             </details>
           ))}
         </motion.div>

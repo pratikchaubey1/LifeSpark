@@ -16,7 +16,7 @@ const AboutSection = () => (
     className="py-16 md:py-20 border-b border-slate-200 bg-slate-50"
   >
     <div className="max-w-6xl mx-auto px-4">
-      {sectionTitle("About Us", "The Most Profitable Company in WSE")}
+      {sectionTitle("About Us", "The Most Profitable Company")}
       <div className="grid md:grid-cols-[1.4fr_1fr] gap-10 items-start">
         <motion.div
           initial="hidden"
@@ -27,7 +27,7 @@ const AboutSection = () => (
           className="space-y-5 text-sm md:text-[15px] text-slate-700"
         >
           <p>
-            WORLD SHOPEE ENTERPRISES का विज़न है कि हर भारतीय परिवार में हमारा
+          LIFE SPARK ASSOCIATES का विज़न है कि हर भारतीय परिवार में हमारा
             ब्रांड एक जाना-पहचाना नाम बने। हम व्यक्तिगत देखभाल, स्वास्थ्य और
             वेलनेस जैसे क्षेत्रों में विविध उत्पाद उपलब्ध कराते हैं।
           </p>

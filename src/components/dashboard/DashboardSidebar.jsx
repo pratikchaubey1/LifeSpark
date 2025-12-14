@@ -10,6 +10,7 @@ import ImageUpload from "./Imageuploader";
 import ActivePin from "./ePin/ActivePin";
 import TransferPin from "./ePin/TransferPin";
 import UsedPin from "./ePin/UsedPin";
+import EditPassword from "./EditPassword";
 const DASHBOARD_ITEMS = [
   {
     label: "Profile",
@@ -87,6 +88,8 @@ export default function DashboardSidebar({
         return setActivePanel("edit-profile");
       if (child === "KYC Upload")
         return setActivePanel("kyc-upload");
+      if (child === "Edit Password")   // ✅ FIX
+        return setActivePanel("edit-password");
       if (child === "Edit Bank Details")
         return setActivePanel("edit-bank-details");
     }
@@ -115,6 +118,7 @@ export default function DashboardSidebar({
 
     // Profile
     if (activePanel === "edit-profile") return <EditProfile />;
+   if (activePanel === "edit-password") return <EditPassword />;
     if (activePanel === "kyc-upload") return <ImageUpload />;
     if (activePanel === "edit-bank-details") return <EditBankDetail />;
 

@@ -11,11 +11,11 @@ const FooterSection = ({ onLoginClick, onRegisterClick }) => {
         {/* Newsletter */}
         <div className="rounded-3xl bg-white border border-slate-200 p-6 md:p-8 mb-10 grid md:grid-cols-[1.3fr_1fr] gap-6 items-center shadow-sm">
           <div>
-            <p className="text-xs uppercase tracking-[0.25em] text-emerald-600 mb-2">
-              Newsletter
+            <p className="text-3xl uppercase tracking-[0.25em] text-emerald-600 mb-2">
+              News letter
             </p>
             <h3 className="text-xl md:text-2xl font-semibold text-slate-900 mb-3">
-              Stay updated with WSE news & opportunities.
+              Stay updated with LSA news & opportunities.
             </h3>
             <p className="text-xs md:text-sm text-slate-700">
               न्यूज़लेटर का उद्देश्य है कि महत्वपूर्ण अपडेट, ऑफर्स और एजुकेशनल
@@ -38,7 +38,7 @@ const FooterSection = ({ onLoginClick, onRegisterClick }) => {
         <div className="grid md:grid-cols-4 gap-8 text-xs text-slate-700 mb-8">
           <div>
             <h4 className="text-sm font-semibold text-slate-900 mb-3">
-              World Shopee Enterprises
+          Life Spark Associates
             </h4>
             <p className="text-xs text-slate-600">
               A hybrid platform combining e-commerce and direct selling to
@@ -65,9 +65,9 @@ const FooterSection = ({ onLoginClick, onRegisterClick }) => {
             <h4 className="text-sm font-semibold text-slate-900 mb-3">
               Contact Info
             </h4>
-            <p>Varanasi, Uttar Pradesh</p>
-            <p className="mt-1">worldshopeeenterprises@gmail.com</p>
-            <p>+91 73070 17024</p>
+            <p>5th Floor, 2/A, M.P. Marg, Opera House, Charni Road (East) Mumbai 400005 </p>
+            <p className="mt-1">lifesparkassociate@gmail.com</p>
+            <p>+91 9031917292</p>
           </div>
 
           <div>
@@ -87,7 +87,7 @@ const FooterSection = ({ onLoginClick, onRegisterClick }) => {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-2 border-t border-slate-200 pt-3 text-[11px] text-slate-500">
           <p>
-            © {new Date().getFullYear()} World Shopee Enterprises. All rights
+            © {new Date().getFullYear()} Life Spark Associates All rights
             reserved.
           </p>
 
@@ -107,7 +107,7 @@ const FooterSection = ({ onLoginClick, onRegisterClick }) => {
             </button>
           </div>
 
-          <p>Design inspired by the original WSE website layout.</p>
+          
         </div>
       </div>
     </footer>
