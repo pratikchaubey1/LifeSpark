@@ -7,7 +7,9 @@ import FreedomBusiness from "./MyTeamBusiness/FreedomBusiness";
 import EditProfile from "./EditProfile";
 import EditBankDetail from "./Editbankdetail";
 import ImageUpload from "./Imageuploader";
-
+import ActivePin from "./ePin/ActivePin";
+import TransferPin from "./ePin/TransferPin";
+import UsedPin from "./ePin/UsedPin";
 const DASHBOARD_ITEMS = [
   {
     label: "Profile",
@@ -30,27 +32,11 @@ const DASHBOARD_ITEMS = [
   },
   { label: "Active ID" },
   {
-    label: "My Team Network",
-    children: [
-      { label: "Direct Team" },
-      { label: "Level-wise Team" },
-      { label: "Genealogy View" },
-    ],
-  },
-  {
     label: "My Team Business Support",
     children: [
       { label: "Team Business" },
       { label: "Rank Reward Business" },
       { label: "Freedom Business" },
-    ],
-  },
-  {
-    label: "Income / Reports",
-    children: [
-      { label: "Income Report" },
-      { label: "Payout Report" },
-      { label: "Wallet Ledger" },
     ],
   },
 ];
@@ -59,119 +45,85 @@ export default function DashboardSidebar({
   open = true,
   onClose,
   children,
-  onLoginClick,
-  onRegisterClick,
 }) {
   const [openParent, setOpenParent] = useState(null);
   const [activePanel, setActivePanel] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    typeof window !== "undefined" ? !!localStorage.getItem("token") : false
-  );
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow || "";
-
-    if (typeof window !== "undefined") {
-      setIsLoggedIn(!!localStorage.getItem("token"));
-    }
-
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = previousOverflow;
+    const prev = document.body.style.overflow;
+    if (open) document.body.style.overflow = "hidden";
+    else {
+      document.body.style.overflow = prev;
       setActivePanel(null);
       setOpenParent(null);
     }
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
+    return () => (document.body.style.overflow = prev);
   }, [open]);
 
   if (!open) return null;
 
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-    }
-    setIsLoggedIn(false);
-    if (onClose) onClose();
-    if (typeof window !== "undefined") {
-      window.location.reload();
-    }
-  };
-
   const handleParentClick = (label, hasChildren) => {
     if (hasChildren) {
-      setOpenParent((prev) => (prev === label ? null : label));
-    } else {
-      if (label === "Active ID") {
-        setActivePanel("activate-id");
-      } else {
-        console.log("Clicked parent:", label);
-      }
+      setOpenParent((p) => (p === label ? null : label));
+    } else if (label === "Active ID") {
+      setActivePanel("activate-id");
     }
   };
 
-  const handleChildClick = (parentLabel, childLabel) => {
-    if (parentLabel === "Profile") {
-      if (childLabel === "Edit Profile") {
-        setActivePanel("edit-profile");
-        return;
-      }
-      if (childLabel === "KYC Upload") {
-        setActivePanel("kyc-upload");
-        return;
-      }
-      if (childLabel === "Edit Bank Details") {
-        setActivePanel("edit-bank-details");
-        return;
-      }
+  const handleChildClick = (parent, child) => {
+    // ✅ ePin section
+    if (parent === "ePin") {
+      if (child === "Generate ePin")
+        return setActivePanel("epin-generate");
+      if (child === "ePin Transfer")
+        return setActivePanel("epin-transfer");
+      if (child === "ePin Report")
+        return setActivePanel("epin-report");
     }
 
-    if (parentLabel === "My Team Business Support") {
-      if (childLabel === "Team Business") {
-        setActivePanel("team-business");
-        return;
-      }
-      if (childLabel === "Rank Reward Business") {
-        setActivePanel("rank-reward-business");
-        return;
-      }
-      if (childLabel === "Freedom Business") {
-        setActivePanel("freedom-business");
-        return;
-      }
+    // Profile
+    if (parent === "Profile") {
+      if (child === "Edit Profile")
+        return setActivePanel("edit-profile");
+      if (child === "KYC Upload")
+        return setActivePanel("kyc-upload");
+      if (child === "Edit Bank Details")
+        return setActivePanel("edit-bank-details");
     }
 
-    console.log(`Clicked: ${parentLabel} → ${childLabel}`);
+    // Team business
+    if (parent === "My Team Business Support") {
+      if (child === "Team Business")
+        return setActivePanel("team-business");
+      if (child === "Rank Reward Business")
+        return setActivePanel("rank-reward-business");
+      if (child === "Freedom Business")
+        return setActivePanel("freedom-business");
+    }
+
     setActivePanel(null);
   };
 
   const renderRightPanelContent = () => {
-    if (activePanel === "activate-id") {
-      return <ActivateID compact />;
-    }
+    // Active ID
+    if (activePanel === "activate-id") return <ActivateID compact />;
 
-    if (activePanel === "edit-profile") {
-      return <EditProfile />;
-    }
-    if (activePanel === "kyc-upload") {
-      return <ImageUpload />;
-    }
-    if (activePanel === "edit-bank-details") {
-      return <EditBankDetail />;
-    }
+    // ePin
+    if (activePanel === "epin-generate") return <ActivePin />;
+    if (activePanel === "epin-transfer") return <TransferPin />;
+    if (activePanel === "epin-report") return <UsedPin />;
 
-    if (activePanel === "team-business") {
-      return <TeamBusiness />;
-    }
-    if (activePanel === "rank-reward-business") {
+    // Profile
+    if (activePanel === "edit-profile") return <EditProfile />;
+    if (activePanel === "kyc-upload") return <ImageUpload />;
+    if (activePanel === "edit-bank-details") return <EditBankDetail />;
+
+    // Team business
+    if (activePanel === "team-business") return <TeamBusiness />;
+    if (activePanel === "rank-reward-business")
       return <RankRewardBusiness />;
-    }
-    if (activePanel === "freedom-business") {
+    if (activePanel === "freedom-business")
       return <FreedomBusiness />;
-    }
 
     return children || null;
   };
@@ -180,64 +132,43 @@ export default function DashboardSidebar({
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm md:bg-slate-900/30"
+        className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Sidebar */}
-      <aside
-        className="
-          fixed inset-y-0 left-0 z-50 
-          w-full max-w-xs sm:max-w-sm md:w-72 
-          bg-slate-900 text-slate-50 shadow-2xl flex flex-col
-        "
-      >
-        {/* Top */}
-        <div className="flex items-center justify-between px-4 h-14 md:h-16 border-b border-slate-800">
-          <span className="text-xs sm:text-sm font-semibold tracking-wide uppercase">
+      <aside className="fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 text-white flex flex-col">
+        <div className="h-14 flex items-center justify-between px-4 border-b border-slate-800">
+          <span className="text-sm font-semibold uppercase">
             Member Menu
           </span>
-          <button
-            onClick={onClose}
-            className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-slate-800 text-xl"
-            aria-label="Close sidebar"
-          >
-            ×
-          </button>
+          <button onClick={onClose} className="text-xl">×</button>
         </div>
 
-        {/* nav */}
-        <nav className="flex-1 overflow-y-auto px-2 py-3 md:py-4 space-y-1 text-xs sm:text-sm">
+        <nav className="flex-1 overflow-y-auto px-2 py-3 space-y-1 text-sm">
           {DASHBOARD_ITEMS.map((item) => {
-            const isOpen = openParent === item.label;
-            const hasChildren = !!item.children?.length;
+            const open = openParent === item.label;
             return (
-              <div key={item.label} className="space-y-1">
+              <div key={item.label}>
                 <button
-                  onClick={() => handleParentClick(item.label, hasChildren)}
-                  className="w-full flex items-center justify-between rounded-lg px-3 py-2 hover:bg-slate-800/60 transition"
+                  onClick={() =>
+                    handleParentClick(item.label, !!item.children)
+                  }
+                  className="w-full flex justify-between px-3 py-2 rounded hover:bg-slate-800"
                 >
-                  <span className="truncate">{item.label}</span>
-                  {hasChildren && (
-                    <span
-                      className={`text-xs opacity-70 transform transition-transform ${
-                        isOpen ? "rotate-90" : ""
-                      }`}
-                    >
-                      ›
-                    </span>
-                  )}
+                  {item.label}
+                  {item.children && <span>›</span>}
                 </button>
 
-                {hasChildren && isOpen && (
-                  <div className="pl-3 md:pl-4 space-y-1">
+                {item.children && open && (
+                  <div className="pl-4 space-y-1">
                     {item.children.map((child) => (
                       <button
                         key={child.label}
                         onClick={() =>
                           handleChildClick(item.label, child.label)
                         }
-                        className="w-full text-left rounded-md px-3 py-1.5 text-[11px] sm:text-[13px] bg-slate-900/40 hover:bg-slate-800/80 transition"
+                        className="block w-full text-left px-3 py-1.5 rounded hover:bg-slate-800"
                       >
                         {child.label}
                       </button>
@@ -248,61 +179,10 @@ export default function DashboardSidebar({
             );
           })}
         </nav>
-
-        {/* footer */}
-        <div className="border-t border-slate-800 px-4 py-3 md:py-4">
-          <div className="flex gap-2">
-            {isLoggedIn ? (
-              <button
-                className="flex-1 rounded-lg bg-red-500 px-3 py-2 text-xs sm:text-sm font-medium text-white shadow-sm hover:bg-red-600 transition"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            ) : (
-              <>
-                <button
-                  className="flex-1 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-500 px-3 py-2 text-xs sm:text-sm font-medium text-white shadow-sm hover:opacity-95 transition"
-                  onClick={
-                    onRegisterClick ||
-                    (() => {
-                      console.log("Register clicked");
-                    })
-                  }
-                >
-                  Register
-                </button>
-
-                <button
-                  className="flex-1 rounded-lg border border-slate-500/70 bg-slate-900/60 px-3 py-2 text-xs sm:text-sm font-medium text-slate-100 hover:bg-slate-800 transition"
-                  onClick={
-                    onLoginClick ||
-                    (() => {
-                      console.log("Login clicked");
-                    })
-                  }
-                >
-                  Login
-                </button>
-              </>
-            )}
-          </div>
-        </div>
       </aside>
 
-      {/* Right-side slider content area */}
-      <section
-        className="
-          fixed z-40 
-          bg-slate-950/95 text-slate-50 border-l border-slate-800 
-          overflow-y-auto 
-          top-14 md:top-0 
-          left-0 right-0 
-          md:left-72 
-          bottom-0 
-          p-3 sm:p-4 md:p-6
-        "
-      >
+      {/* Right Panel */}
+      <section className="fixed inset-y-0 left-72 right-0 z-40 bg-slate-950 text-white overflow-y-auto p-4 md:p-6">
         {renderRightPanelContent()}
       </section>
     </>
