@@ -37,6 +37,10 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token")
   );
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, []);
+
   const [welcomeData, setWelcomeData] = useState(null);
 
   async function handleRegisterSubmit(payload) {
