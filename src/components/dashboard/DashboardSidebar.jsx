@@ -6,11 +6,8 @@ import EditProfile from "./EditProfile";
 import EditBankDetail from "./Editbankdetail";
 import ImageUpload from "./Imageuploader";
 
-import TeamBusiness from "./MyTeamBusiness/TeamBusiness";
-import RankRewardBusiness from "./MyTeamBusiness/RankRewardBusiness";
-import FreedomBusiness from "./MyTeamBusiness/FreedomBusiness";
-
 import TotalDirectUser from "./MyTeamNetwork/TotalDirectUser";
+import TotalActiveUser from "./MyTeamNetwork/TotalActiveUser";
 import TotalInactiveUser from "./MyTeamNetwork/TotalInactiveUser";
 
 /* ===== SIDEBAR MENU ===== */
@@ -18,25 +15,21 @@ const DASHBOARD_ITEMS = [
   {
     label: "Profile",
     children: [
-      { label: "Edit Profile" },
-      { label: "KYC Upload" },
-      { label: "Edit Bank Details" },
+      { label: "Edit Profile", key: "edit-profile" },
+      { label: "KYC Upload", key: "kyc-upload" },
+      { label: "Edit Bank Details", key: "edit-bank-details" },
     ],
   },
-  { label: "Active ID" },
+  {
+    label: "Active ID",
+    key: "activate-id",
+  },
   {
     label: "My Team Network",
     children: [
-      { label: "Direct Team" },
-      { label: "Inactive Direct Team" },
-    ],
-  },
-  {
-    label: "My Team Business Support",
-    children: [
-      { label: "Team Business" },
-      { label: "Rank Reward Business" },
-      { label: "Freedom Business" },
+      { label: "Total Direct User", key: "direct-user" },
+      { label: "Total Active User", key: "active-user" },
+      { label: "Total Inactive User", key: "inactive-user" },
     ],
   },
 ];
@@ -53,62 +46,37 @@ export default function DashboardSidebar({ open, onClose }) {
 
   if (!open) return null;
 
-  /* ===== PARENT CLICK ===== */
-  const handleParentClick = (label, hasChildren) => {
-    if (hasChildren) {
-      setOpenParent((prev) => (prev === label ? null : label));
-    } else {
-      if (label === "Active ID") setActivePanel("activate-id");
-    }
-  };
-
-  /* ===== CHILD CLICK ===== */
-  const handleChildClick = (parent, child) => {
-    if (parent === "Profile") {
-      if (child === "Edit Profile") setActivePanel("edit-profile");
-      if (child === "KYC Upload") setActivePanel("kyc-upload");
-      if (child === "Edit Bank Details")
-        setActivePanel("edit-bank-details");
-    }
-
-    if (parent === "My Team Network") {
-      if (child === "Direct Team") setActivePanel("direct-team");
-      if (child === "Inactive Direct Team")
-        setActivePanel("inactive-direct-team");
-    }
-
-    if (parent === "My Team Business Support") {
-      if (child === "Team Business") setActivePanel("team-business");
-      if (child === "Rank Reward Business")
-        setActivePanel("rank-reward-business");
-      if (child === "Freedom Business")
-        setActivePanel("freedom-business");
-    }
-  };
-
-  /* ===== RIGHT PANEL ===== */
+  /* ===== PANEL RENDER ===== */
   const renderPanel = () => {
-    if (activePanel === "activate-id") return <ActivateID compact />;
+    switch (activePanel) {
+      case "activate-id":
+        return <ActivateID />;
 
-    if (activePanel === "edit-profile") return <EditProfile />;
-    if (activePanel === "kyc-upload") return <ImageUpload />;
-    if (activePanel === "edit-bank-details") return <EditBankDetail />;
+      case "edit-profile":
+        return <EditProfile />;
 
-    if (activePanel === "direct-team") return <TotalDirectUser />;
-    if (activePanel === "inactive-direct-team")
-      return <TotalInactiveUser />;
+      case "kyc-upload":
+        return <ImageUpload />;
 
-    if (activePanel === "team-business") return <TeamBusiness />;
-    if (activePanel === "rank-reward-business")
-      return <RankRewardBusiness />;
-    if (activePanel === "freedom-business")
-      return <FreedomBusiness />;
+      case "edit-bank-details":
+        return <EditBankDetail />;
 
-    return (
-      <div className="h-full flex items-center justify-center text-slate-400 text-lg">
-        Select a menu option
-      </div>
-    );
+      case "direct-user":
+        return <TotalDirectUser />;
+
+      case "active-user":
+        return <TotalActiveUser />;
+
+      case "inactive-user":
+        return <TotalInactiveUser />;
+
+      default:
+        return (
+          <div className="h-full flex items-center justify-center text-slate-400 text-lg">
+            Select a menu option
+          </div>
+        );
+    }
   };
 
   return (
@@ -123,8 +91,11 @@ export default function DashboardSidebar({ open, onClose }) {
       <aside className="fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 text-white flex flex-col shadow-2xl">
         {/* HEADER */}
         <div className="h-16 px-4 flex items-center justify-between border-b border-slate-800">
-          <h2 className="font-semibold">Member Menu</h2>
-          <button onClick={onClose} className="text-xl hover:text-red-400">
+          <h2 className="font-semibold text-lg">Member Menu</h2>
+          <button
+            onClick={onClose}
+            className="text-xl hover:text-red-400"
+          >
             ×
           </button>
         </div>
@@ -132,15 +103,20 @@ export default function DashboardSidebar({ open, onClose }) {
         {/* MENU */}
         <nav className="flex-1 overflow-y-auto px-2 py-4 space-y-1">
           {DASHBOARD_ITEMS.map((item) => {
-            const isOpen = openParent === item.label;
             const hasChildren = item.children?.length;
+            const isOpen = openParent === item.label;
 
             return (
               <div key={item.label}>
+                {/* PARENT */}
                 <button
-                  onClick={() =>
-                    handleParentClick(item.label, hasChildren)
-                  }
+                  onClick={() => {
+                    if (hasChildren) {
+                      setOpenParent(isOpen ? null : item.label);
+                    } else {
+                      setActivePanel(item.key);
+                    }
+                  }}
                   className="w-full flex justify-between items-center px-3 py-2 rounded-lg hover:bg-slate-800"
                 >
                   <span>{item.label}</span>
@@ -155,15 +131,18 @@ export default function DashboardSidebar({ open, onClose }) {
                   )}
                 </button>
 
+                {/* CHILDREN */}
                 {hasChildren && isOpen && (
                   <div className="ml-4 mt-1 space-y-1">
                     {item.children.map((child) => (
                       <button
-                        key={child.label}
-                        onClick={() =>
-                          handleChildClick(item.label, child.label)
-                        }
-                        className="w-full text-left px-3 py-1.5 text-sm rounded-md hover:bg-slate-700"
+                        key={child.key}
+                        onClick={() => setActivePanel(child.key)}
+                        className={`w-full text-left px-3 py-1.5 text-sm rounded-md hover:bg-slate-700 ${
+                          activePanel === child.key
+                            ? "bg-slate-700 text-white"
+                            : ""
+                        }`}
                       >
                         {child.label}
                       </button>
